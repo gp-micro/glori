@@ -1,0 +1,7 @@
+fastq_dir: "data/fastq"
+results_dir: "results"
+hisat2_index: "path/to/hisat2/index/genome"
+sample_to_fastq:
+    "sample1": "path/to/data/SRR12345_R1.fastq.gz"
+    "sample2": "path/to/data/EXPT42_lane3.fastq.gz"
+    "sample3": "path/to/data/patient007_blood_2023.fastq.gz"

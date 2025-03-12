@@ -1,0 +1,6 @@
+[submodule "GLORI_pipeline"]
+	path = GLORI_pipeline
+	url = https://github.com/jhfoxliu/GLORI_pipeline.git
+[submodule "RNA-m5C"]
+	path = RNA-m5C
+	url = https://github.com/SYSU-zhanglab/RNA-m5C.git
