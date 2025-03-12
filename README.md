@@ -1,0 +1,3 @@
+# GLORI Snakemake workflow
+
+
