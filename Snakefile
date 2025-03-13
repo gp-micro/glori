@@ -6,6 +6,8 @@ SAMPLES = list(SAMPLE_TO_FASTQ.keys())
 HISAT2_PATH = config["hisat2_path"]
 HISAT2_INDEX_DIR = config["hisat2_index_dir"]
 REFERENCE_FASTA = config["reference_fasta"]
+REFERENCE_GTF = config["reference_gtf"]
+DB_PATH = config["db_path"]
 
 rule umitools_extract:
     input:
@@ -104,4 +106,13 @@ rule pileup:
     shell:
         "python GLORI_pipeline/scripts/pileup_genome.py -P {threads} -i {input.bam} -o {output} -f {input.ref} >& {log}"
 
-
+rule gtf2anno:
+    input:
+        REFERENCE_GTF
+    output:
+        DB_PATH + "/anno"
+    conda:
+        "envs/python_2.7.16.yaml"
+    threads: 10
+    shell:
+        "python scripts/gtf2anno_plus_gencode.py -i {input} > {output}"
