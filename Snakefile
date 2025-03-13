@@ -6,15 +6,15 @@ SAMPLES = list(SAMPLE_TO_FASTQ.keys())
 
 rule umitools_extract:
     input:
-        FASTQ_DIR + "/{sample}.fastq.gz"
+        lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]
     output:
-        RESULTS_DIR + "/umi_extracted/{sample}.extracted.fastq.gz"
+        RESULTS_DIR + "/umi_extracted/{sample}.fastq.gz"
     conda:
         "envs/umitools_env.yaml"
     log:
         "logs/umitools_extract/{sample}.log"
     shell:
-        "#UMITOOLS"
+        "umi_tools extract -I {input} -S {output} -p NNNNNNNNNNNN --log={log}"
 
 rule cutadapt:
     input:
@@ -30,8 +30,7 @@ rule cutadapt:
 
 rule hisat2_mapping:
     input:
-        fastq = RESULTS_DIR + "/trimmed/{sample}.trimmed.fastq.gz",
-        index = HISAT2_INDEX
+        fastq = RESULTS_DIR + "/trimmed/{sample}.trimmed.fastq.gz"
     output:
         RESULTS_DIR + "/bam/{sample}.bam"
     conda:
