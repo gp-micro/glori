@@ -18,15 +18,15 @@ rule umitools_extract:
 
 rule cutadapt:
     input:
-        RESULTS_DIR + "/umi_extracted/{sample}.extracted.fastq.gz"
+        RESULTS_DIR + "/umi_extracted/{sample}.fastq.gz"
     output:
-        RESULTS_DIR + "/trimmed/{sample}.trimmed.fastq.gz"
+        RESULTS_DIR + "/cutadapt_trimmed/{sample}.fastq.gz"
     conda:
         "envs/cutadapt_env.yaml"
     log:
         "logs/cutadapt/{sample}.log"
     shell:
-        "#CUTADAPT"
+        "cutadapt -a AGATCGGAAGAGCGTCGTG --max-n 0 --trimmed-only -e 0.1 -q 30 -m 30 --trim-n -o {output} {input} &> {log}"
 
 rule hisat2_mapping:
     input:
