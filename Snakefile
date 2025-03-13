@@ -5,6 +5,7 @@ SAMPLE_TO_FASTQ = config["sample_to_fastq"]
 SAMPLES = list(SAMPLE_TO_FASTQ.keys())
 HISAT2_PATH = config["hisat2_path"]
 HISAT2_INDEX_DIR = config["hisat2_index_dir"]
+REFERENCE_FASTA = config["reference_fasta"]
 
 rule umitools_extract:
     input:
@@ -89,3 +90,18 @@ rule samtools_sort_index_dedupped:
     threads: 1
     shell:
         "samtools sort -m 10G -o {output.bam} {input}; samtools index {output.bam}"
+
+rule pileup:
+    input:
+        bam=RESULTS_DIR + "/umi_dedup_sorted/{sample}.sorted.umi.sorted.bam",
+        ref=REFERENCE_FASTA
+    output:
+        RESULTS_DIR + "/pileups_tmp/{sample}.pileups.tmp"
+    conda:
+        "envs/python_2.7.16.yaml"
+    threads: 1
+    log: "logs/pileup/{sample}.log"
+    shell:
+        "python GLORI_pipeline/scripts/pileup_genome.py -P {threads} -i {input.bam} -o {output} -f {input.ref} >& {log}"
+
+

@@ -9,3 +9,4 @@ sample_to_fastq:
 #in a specific place
 hisat2_path: "/gpfs/scratch/gp1269/GLORI/hisat2"
 hisat2_index_dir: "/gpfs/scratch/gp1269/GLORI/HISAT2_index_from_Fox/script_output_attempt_2/"
+reference_fasta: "/gpfs/scratch/gp1269/GLORI/HISAT2_index_from_Fox/GRCh38.primary_assembly.genome.nochr.HSV.fa"
