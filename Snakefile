@@ -54,13 +54,38 @@ rule hisat2_mapping:
             RESULTS_DIR + "/hisat2/{wildcards.sample} -I {HISAT2_INDEX_DIR} --index-prefix HISAT2 " +
             "--hisat2-path {HISAT2_PATH} --del-convert --del-sam >& {log}"
 
-rule samtools_sort:
+rule samtools_sort_index:
     input:
-        RESULTS_DIR + "/bam/{sample}.bam"
+        RESULTS_DIR + "/hisat2/{sample}.bam",
     output:
-        RESULTS_DIR + "/sorted_bam/{sample}.sorted.bam"
+        bam=RESULTS_DIR + "/hisat2/{sample}.sorted.bam",
+        bai=RESULTS_DIR + "/hisat2/{sample}.sorted.bam.bai"
     conda:
-        "envs/samtools_env.yaml"
-    threads: 4
+        "envs/python_2.7.16.yaml"
+    threads: 1
     shell:
-        "#SAMTOOLS SORT"
+        "samtools sort -m 10G -o {output.bam} {input}; samtools index {output.bam}"
+
+rule umitools_dedup:
+    input:
+        RESULTS_DIR + "/hisat2/{sample}.sorted.bam"
+    output:
+        RESULTS_DIR + "/umi_dedup/{sample}.sorted.umi.bam"
+    conda:
+        "envs/umitools_env.yaml"
+    log:
+        "logs/umitools_dedup/{sample}.log"
+    shell:
+        "umi_tools dedup --stdin={input} --log={log} --method=unique > {output}"
+
+rule samtools_sort_index_dedupped:
+    input:
+        RESULTS_DIR + "/umi_dedup/{sample}.sorted.umi.bam"
+    output:
+        bam=RESULTS_DIR + "/umi_dedup_sorted/{sample}.sorted.umi.sorted.bam",
+        bai=RESULTS_DIR + "/umi_dedup_sorted/{sample}.sorted.umi.sorted.bam.bai"
+    conda:
+        "envs/python_2.7.16.yaml"
+    threads: 1
+    shell:
+        "samtools sort -m 10G -o {output.bam} {input}; samtools index {output.bam}"
