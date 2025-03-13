@@ -3,6 +3,8 @@ configfile: "config.yaml"
 RESULTS_DIR = config["results_dir"]
 SAMPLE_TO_FASTQ = config["sample_to_fastq"]
 SAMPLES = list(SAMPLE_TO_FASTQ.keys())
+HISAT2_PATH = config["hisat2_path"]
+HISAT2_INDEX_DIR = config["hisat2_index_dir"]
 
 rule umitools_extract:
     input:
@@ -28,18 +30,29 @@ rule cutadapt:
     shell:
         "cutadapt -a AGATCGGAAGAGCGTCGTG --max-n 0 --trimmed-only -e 0.1 -q 30 -m 30 --trim-n -o {output} {input} &> {log}"
 
+rule decompress:
+    input:
+        RESULTS_DIR + "/cutadapt_trimmed/{sample}.fastq.gz"
+    output:
+        temp(RESULTS_DIR + "/cutadapt_trimmed_decompressed/{sample}.fastq")
+    shell:
+        "zcat {input} > {output}"
+
 rule hisat2_mapping:
     input:
-        fastq = RESULTS_DIR + "/trimmed/{sample}.trimmed.fastq.gz"
+        fastq=RESULTS_DIR + "/cutadapt_trimmed_decompressed/{sample}.fastq"
     output:
-        RESULTS_DIR + "/bam/{sample}.bam"
+        bam=RESULTS_DIR + "/hisat2/{sample}.bam",
+        multimap=RESULTS_DIR + "/hisat2/{sample}.multimappers.bam",
     conda:
-        "envs/hisat2_env.yaml"
+        "envs/python_2.7.16.yaml"
     log:
         "logs/hisat2/{sample}.log"
     threads: 8
     shell:
-        "#HISAT2"
+        "python GLORI_pipeline/scripts/A2G_hisat2.py -F {input} -o " +
+            RESULTS_DIR + "/hisat2/{wildcards.sample} -I {HISAT2_INDEX_DIR} --index-prefix HISAT2 " +
+            "--hisat2-path {HISAT2_PATH} --del-convert --del-sam >& {log}"
 
 rule samtools_sort:
     input:

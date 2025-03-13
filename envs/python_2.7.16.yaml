@@ -1,0 +1,11 @@
+name: python_2.7.16
+channels:
+  - defaults
+  - conda-forge
+  - bioconda
+dependencies:
+    - python=2.7.16
+    - numpy=1.13.3
+    - scipy=0.19.1
+    - pysam=0.12.0.1
+    - biopython=1.70
