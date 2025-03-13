@@ -1,8 +1,6 @@
 configfile: "config.yaml"
 
-FASTQ_DIR = config["fastq_dir"]
 RESULTS_DIR = config["results_dir"]
-HISAT2_INDEX = config["hisat2_index"]
 SAMPLE_TO_FASTQ = config["sample_to_fastq"]
 SAMPLES = list(SAMPLE_TO_FASTQ.keys())
 
