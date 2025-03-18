@@ -113,6 +113,18 @@ rule gtf2anno:
         DB_PATH + "/anno"
     conda:
         "envs/python_2.7.16.yaml"
-    threads: 10
+    threads: 1
     shell:
         "python scripts/gtf2anno_plus_gencode.py -i {input} > {output}"
+
+rule anno_to_base:
+    input:
+        DB_PATH + "/anno"
+    output:
+        base=DB_PATH + "/base",
+        base_sorted=DB_PATH + "/base.sorted",
+    conda:
+        "envs/python_2.7.16.yaml"
+    threads: 10
+    shell:
+        "python RNA-m5C/0_m5C_step-by-step_metadata/anno_to_base.py -i {input} -o {output.base}"
