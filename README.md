@@ -1,11 +1,15 @@
 # GLORI Snakemake workflow
 
-## Cloning this repository
+## Credits
 
 This repository is little more than a [Snakemake](https://snakemake.readthedocs.io/en/stable/) wrapper for the following repositories (as well as some related scripts):
 
 - [`jhfoxliu/GLORI_pipeline`](https://github.com/jhfoxliu/GLORI_pipeline)
 - [`SYSU-zhanglab/RNA-m5C`](https://github.com/SYSU-zhanglab/RNA-m5C)
+
+Credit is due to Fox (`jfoxliu`) creating `GLORI_pipeline` as well as the scripts in the `scripts/` directory of this repository.
+
+## Cloning this repository
 
 Those repositories are included as submodules. Here is how to clone *this* repository and include the above dependencies:
 
