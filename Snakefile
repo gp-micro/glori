@@ -121,6 +121,10 @@ rule format_output:
     shell:
         "python GLORI_pipeline/scripts/format_pileups.py -i {input.pileup} -o {output.pileup} --CR {output.pileup_CR} --db {input.db} >& {log}"
 
+rule pileups:
+    input:
+        expand(RESULTS_DIR + "/pileups_txt/{sample}.pileups.txt",sample=SAMPLES)
+
 rule gtf2anno:
     input:
         REFERENCE_GTF
