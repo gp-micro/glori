@@ -20,11 +20,11 @@ Configuration of the pipeline takes place through the file `config.yaml`, which 
         "test1": "GLORI_pipeline/notebook/test1.fastq.gz"
         "test2": "GLORI_pipeline/notebook/test2.fastq.gz"
 
-    hisat2_path: "*MYSCRATCH*/GLORI/hisat2"
-    hisat2_index_dir: "*MYSCRATCH*/GLORI_HISAT2_INDEXES"
-    reference_fasta: "*PATH_TO_REF_FASTA*"
-    reference_gtf: "*PATH_TO_REF_GTF*"
-    db_path: "*MYSCRATCH*/db_will_be_created_here"
+    hisat2_path: "MYSCRATCH/GLORI/hisat2"
+    hisat2_index_dir: "MYSCRATCH/GLORI_HISAT2_INDEXES"
+    reference_fasta: "PATH_TO_REF_FASTA"
+    reference_gtf: "PATH_TO_REF_GTF"
+    db_path: "MYSCRATCH/db_will_be_created_here"
 
 This Snakemake workflow currently *does not* perform the steps needed to generate the HISAT2 indexes. But I plan to add them.
 
@@ -35,7 +35,7 @@ This Snakemake workflow currently *does not* perform the steps needed to generat
 
 ## Running
 
-    CACHE=*MYSCRATCH*/snakemake_conda_cache
+    CACHE=MYSCRATCH/snakemake_conda_cache
     snakemake --cores 10 --software-deployment-method conda --conda-prefix $CACHE --conda-frontend conda pileups
 
-
+You may not need `--conda-frontend conda` if you have a relatively recent version of `conda`. 
