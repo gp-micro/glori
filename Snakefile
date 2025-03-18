@@ -106,6 +106,21 @@ rule pileup:
     shell:
         "python GLORI_pipeline/scripts/pileup_genome.py -P {threads} -i {input.bam} -o {output} -f {input.ref} >& {log}"
 
+rule format_output:
+    input:
+        pileup=RESULTS_DIR + "/pileups_tmp/{sample}.pileups.tmp",
+        db=DB_PATH + "/db"
+    output:
+        pileup=RESULTS_DIR + "/pileups_txt/{sample}.pileups.txt",
+        pileup_CR=RESULTS_DIR + "/pileups_CR/{sample}.pileups.CR"
+    log:
+        "logs/format_output/{sample}.log"
+    conda:
+        "envs/python_2.7.16.yaml"
+    threads: 1
+    shell:
+        "python GLORI_pipeline/scripts/format_pileups.py -i {input.pileup} -o {output.pileup} --CR {output.pileup_CR} --db {input.db} >& {log}"
+
 rule gtf2anno:
     input:
         REFERENCE_GTF
