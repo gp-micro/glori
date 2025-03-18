@@ -46,5 +46,5 @@ You may not need `--conda-frontend conda` if you have a relatively recent versio
 
 At the moment, this Snakemake workflow assumes you have generated the necessary HISAT2 indexes. It then handles the steps that process FASTQ files in order to generated formatted pileups, which will be generated in a subdirectory `pileups_txt` of the `results_dir` directory specified in `config.yaml`.
 
-![Workflow DAG](pipeline_dag.dvg)
+![Workflow DAG](pipeline_dag.svg)
 
