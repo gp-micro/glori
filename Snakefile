@@ -128,3 +128,15 @@ rule anno_to_base:
     threads: 10
     shell:
         "python RNA-m5C/0_m5C_step-by-step_metadata/anno_to_base.py -i {input} -o {output.base}"
+
+rule anno_to_base_remove_redundance:
+    input:
+        base_sorted=DB_PATH + "/base.sorted",
+        anno=DB_PATH + "/anno"
+    output:
+        DB_PATH + "/db"
+    conda:
+        "envs/python_2.7.16.yaml"
+    threads: 1
+    shell:
+        "python scripts/anno_to_base_remove_redundance_v1.1.py -i {input.base_sorted} -a {input.anno} -o {output}"
