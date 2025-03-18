@@ -30,13 +30,15 @@ This Snakemake workflow currently *does not* perform the steps needed to generat
 
 ## Software requirements
 
-- conda
+- conda (I have been using 4.11.0 - I know, I know)
 - Snakemake (I have been using version 8.16.0)
 
 ## Running
 
     CACHE=MYSCRATCH/snakemake_conda_cache
-    snakemake --cores 10 --software-deployment-method conda --conda-prefix $CACHE --conda-frontend conda pileups
+    snakemake --cores 10 \
+        --software-deployment-method conda --conda-prefix $CACHE --conda-frontend conda \
+        pileups
 
 You may not need `--conda-frontend conda` if you have a relatively recent version of `conda`. 
 
