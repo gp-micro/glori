@@ -125,6 +125,16 @@ rule pileups:
     input:
         expand(RESULTS_DIR + "/pileups_txt/{sample}.pileups.txt",sample=SAMPLES)
 
+rule sample_sheet:
+    input:
+        expand(RESULTS_DIR + "/pileups_txt/{sample}.pileups.txt",sample=SAMPLES)
+    output:
+        sheet=RESULTS_DIR + "/sample_sheet.tsv"
+    run:
+        with open(output.sheet, "w") as out:
+            for sample in SAMPLES:
+                out.write(sample + "\t" + RESULTS_DIR + "/pileups_txt/" + sample + ".pileups.txt" + "\t" + "gene" + "\t" + "3" + "\n")
+
 rule gtf2anno:
     input:
         REFERENCE_GTF
