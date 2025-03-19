@@ -135,6 +135,19 @@ rule sample_sheet:
             for sample in SAMPLES:
                 out.write(sample + "\t" + RESULTS_DIR + "/pileups_txt/" + sample + ".pileups.txt" + "\t" + "gene" + "\t" + "3" + "\n")
 
+rule m6A_caller:
+    input:
+        sheet=RESULTS_DIR + "/sample_sheet.tsv"
+    output:
+        m6A_calls=RESULTS_DIR + "/m6A_calls.csv"
+    log:
+        "logs/m6A_calls.txt"
+    conda:
+        "envs/python_2.7.16.yaml"
+    threads: 1
+    shell:
+        "python GLORI_pipeline/scripts/m6A_caller.py -i {input.sheet} -o {output.m6A_calls} -P {threads} 2>&1 | tee {log}"
+
 rule gtf2anno:
     input:
         REFERENCE_GTF
