@@ -42,7 +42,7 @@ This Snakemake workflow currently *does not* perform the steps needed to generat
     CACHE=MYSCRATCH/snakemake_conda_cache
     snakemake --cores 10 \
         --software-deployment-method conda --conda-prefix $CACHE --conda-frontend conda \
-        pileups
+        evaluate_calls
 
 You may not need `--conda-frontend conda` if you have a relatively recent version of `conda`. 
 
