@@ -143,10 +143,10 @@ rule m6A_caller:
     log:
         "logs/m6A_calls.txt"
     conda:
-        "envs/python_2.7.16.yaml"
+        "envs/m6A_caller.yaml"
     threads: 1
     shell:
-        "python GLORI_pipeline/scripts/m6A_caller.py -i {input.sheet} -o {output.m6A_calls} -P {threads} 2>&1 | tee {log}"
+        "python scripts/m6A_caller_2.py -i {input.sheet} -o {output.m6A_calls} -P {threads} 2>&1 | tee {log}"
 
 rule gtf2anno:
     input:
