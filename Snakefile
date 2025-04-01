@@ -148,6 +148,19 @@ rule m6A_caller:
     shell:
         "python scripts/m6A_caller_2.py -i {input.sheet} -o {output.m6A_calls} -P {threads} 2>&1 | tee {log}"
 
+rule evaluate_calls:
+    input:
+        m6A_calls=RESULTS_DIR + "/m6A_calls.csv"
+    output:
+        m6A_calls=RESULTS_DIR + "/m6A_calls_w_reliability.csv"
+    log:
+        "logs/evaluate_calls.txt"
+    conda:
+        "envs/m6A_caller.yaml"
+    threads: 1
+    shell:
+        "python GLORI_pipeline/scripts/evaluate_sites.py -i {input} -o {output} 2>&1 | tee {log}"
+
 rule gtf2anno:
     input:
         REFERENCE_GTF
