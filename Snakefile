@@ -9,6 +9,21 @@ REFERENCE_FASTA = config["reference_fasta"]
 REFERENCE_GTF = config["reference_gtf"]
 DB_PATH = config["db_path"]
 
+#Note: I ran this using 240 GB of RAM
+rule hisat2_index:
+    input:
+        fasta=REFERENCE_FASTA,
+        gtf=REFERENCE_GTF
+    output:
+        directory(HISAT2_INDEX_DIR)
+    conda:
+        "envs/python_2.7.16.yaml"
+    log:
+        "logs/hisat2_index.log"
+    threads: 16
+    shell:
+        "python GLORI_pipeline/scripts/A2G_hisat2_index.py -i {input.fasta} -p {threads} -o {output} --gtf {input.gtf} --hisat2-path {HISAT2_PATH} &> {log}"
+
 rule umitools_extract:
     input:
         lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]
@@ -43,6 +58,7 @@ rule decompress:
 
 rule hisat2_mapping:
     input:
+        index=directory(HISAT2_INDEX_DIR),
         fastq=RESULTS_DIR + "/cutadapt_trimmed_decompressed/{sample}.fastq"
     output:
         bam=RESULTS_DIR + "/hisat2/{sample}.bam",
@@ -53,8 +69,8 @@ rule hisat2_mapping:
         "logs/hisat2/{sample}.log"
     threads: 8
     shell:
-        "python GLORI_pipeline/scripts/A2G_hisat2.py -F {input} -o " +
-            RESULTS_DIR + "/hisat2/{wildcards.sample} -I {HISAT2_INDEX_DIR} --index-prefix HISAT2 " +
+        "python GLORI_pipeline/scripts/A2G_hisat2.py -F {input.fastq} -o " +
+            RESULTS_DIR + "/hisat2/{wildcards.sample} -I {input.index} --index-prefix HISAT2 " +
             "--hisat2-path {HISAT2_PATH} --del-convert --del-sam >& {log}"
 
 rule samtools_sort_index:
