@@ -36,6 +36,7 @@ This Snakemake workflow currently *does not* perform the steps needed to generat
 
 - conda (I have been using 4.11.0 - I know, I know)
 - Snakemake (I have been using version 8.16.0)
+- The [HISAT2 aligner](https://daehwankimlab.github.io/hisat2/) version 2.1.0 must be compiled ([instructions here](#compiling-hisat2)) and then the path to the directory *containing* the executable must be specified as the `hisat2_path` parameter in `config.yaml`. So far I have not been able to run the scripts with a HISAT2 loaded via `bioconda` or via `module load`.
 
 ## Running
 
@@ -52,3 +53,6 @@ At the moment, this Snakemake workflow assumes you have generated the necessary 
 
 ![Workflow DAG](pipeline_dag.svg)
 
+## Compiling HISAT2
+
+Here is what I did 
