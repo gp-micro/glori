@@ -55,4 +55,11 @@ At the moment, this Snakemake workflow assumes you have generated the necessary 
 
 ## Compiling HISAT2
 
-Here is what I did 
+First go to a directory where you want to build HISAT2
+
+    git clone --branch v2.1.0 --depth 1 https://github.com/DaehwanKimLab/hisat2
+    cd hisat2
+    make
+    pwd
+
+Use the resulting path as the `hisat2_path` parameter in `config.yaml`.
