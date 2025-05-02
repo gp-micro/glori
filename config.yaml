@@ -1,7 +1,8 @@
 results_dir: "results"
 sample_to_fastq:
-    "test1": "GLORI_pipeline/notebook/test1.fastq.gz"
-    "test2": "GLORI_pipeline/notebook/test2.fastq.gz"
+    "HSV1_Kos_d27_12hpi_DMSO":
+        R1: "input/HSV1_Kos_d27_12hpi_DMSO_S1_L002_R1_001.fastq.gz"
+        R2: "input/HSV1_Kos_d27_12hpi_DMSO_S1_L002_R2_001.fastq.gz"
 
 #As far as I know, you must compile your own hisat2 in order for the hisat2_path
 #to work correctly. You can not module load it. You can not conda activate it.

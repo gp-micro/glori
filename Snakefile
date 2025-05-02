@@ -9,6 +9,10 @@ REFERENCE_FASTA = config["reference_fasta"]
 REFERENCE_GTF = config["reference_gtf"]
 DB_PATH = config["db_path"]
 
+rule list_files:
+    run:
+        print(SAMPLE_TO_FASTQ)
+
 #Note: I ran this using 240 GB of RAM
 rule hisat2_index:
     input:
@@ -26,15 +30,17 @@ rule hisat2_index:
 
 rule umitools_extract:
     input:
-        lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]
+        R1 = lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]["R1"],
+        R2 = lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]["R2"]
     output:
-        RESULTS_DIR + "/umi_extracted/{sample}.fastq.gz"
+        R1=RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
+        R2=RESULTS_DIR + "/umi_extracted_paired/R2/{sample}.fastq.gz"
     conda:
         "envs/umitools_env.yaml"
     log:
         "logs/umitools_extract/{sample}.log"
     shell:
-        "umi_tools extract -I {input} -S {output} -p NNNNNNNNNNNN --log={log}"
+        "umi_tools extract -I {input.R1} -S {output.R1} --read2-in={input.R2} --read2-out={output.R2} -p NNNNNNNNNNNN --log={log}"
 
 rule cutadapt:
     input:
