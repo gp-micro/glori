@@ -2,6 +2,8 @@
 
 ## *Paired-end version: under construction!*
 
+Please note that this README is not yet updated to reflect the paired-end version of the workflow, which is a work in progress.
+
 ## Credits
 
 This repository is little more than a [Snakemake](https://snakemake.readthedocs.io/en/stable/) wrapper for the following repositories (as well as some related scripts):
