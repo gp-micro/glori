@@ -1,5 +1,7 @@
 # GLORI Snakemake workflow
 
+## *Paired-end version: under construction!*
+
 ## Credits
 
 This repository is little more than a [Snakemake](https://snakemake.readthedocs.io/en/stable/) wrapper for the following repositories (as well as some related scripts):
