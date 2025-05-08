@@ -15,9 +15,9 @@ Credit is due to Fox (`jfoxliu`) for creating `GLORI_pipeline` as well as the sc
 
 ## Cloning this repository
 
-The abovementioned repositories are included as submodules. Here is how to clone *this* repository and include the above dependencies:
+The abovementioned repositories are included as submodules. Here is how to clone *this* repository (and in particular the `paired` branch, which used paired-end FASTQ files) and include the above dependencies:
 
-    git clone --recurse-submodules https://github.com/gp-micro/glori
+    git clone -b paired --recurse-submodules https://github.com/gp-micro/glori
 
 ## Configuration
 
@@ -25,8 +25,12 @@ Configuration of the pipeline takes place through the file `config.yaml`, which 
 
     results_dir: "results"
     sample_to_fastq:
-        "test1": "GLORI_pipeline/notebook/test1.fastq.gz"
-        "test2": "GLORI_pipeline/notebook/test2.fastq.gz"
+        "sample1":
+            R1: "path/to/sample1.R1.fastq.gz"
+            R2: "path/to/sample1.R2.fastq.gz"
+        "sample2":
+            R1: "path/to/sample2.R1.fastq.gz"
+            R2: "path/to/sample2.R2.fastq.gz"
 
     hisat2_path: "MYSCRATCH/GLORI/hisat2"
     hisat2_index_dir: "MYSCRATCH/GLORI_HISAT2_INDEXES"
