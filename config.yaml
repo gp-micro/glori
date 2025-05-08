@@ -1,8 +1,17 @@
 results_dir: "results"
 sample_to_fastq:
-    "HSV1_Kos_d27_12hpi_DMSO":
-        R1: "input/HSV1_Kos_d27_12hpi_DMSO_S1_L002_R1_001.fastq.gz"
-        R2: "input/HSV1_Kos_d27_12hpi_DMSO_S1_L002_R2_001.fastq.gz"
+    "do01":
+        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do01_S2_R1_001.fastq.gz"
+        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do01_S2_R2_001.fastq.gz"
+    "do02":
+        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do02_S3_R1_001.fastq.gz"
+        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do02_S3_R2_001.fastq.gz"
+    "do03":
+        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do03_S4_R1_001.fastq.gz"
+        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do03_S4_R2_001.fastq.gz"
+    "do04":
+        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do04_S5_R1_001.fastq.gz"
+        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do04_S5_R2_001.fastq.gz"
 
 #As far as I know, you must compile your own hisat2 in order for the hisat2_path
 #to work correctly. You can not module load it. You can not conda activate it.

@@ -28,6 +28,9 @@ rule hisat2_index:
     shell:
         "python GLORI_pipeline/scripts/A2G_hisat2_index.py -i {input.fasta} -p {threads} -o {output} --gtf {input.gtf} --hisat2-path {HISAT2_PATH} &> {log}"
 
+#Temporarily using an UMI length of 15
+#We think that perhaps the ATAT after the UMI
+#is getting mis-sequenced due to lack of phiX...maybe
 rule umitools_extract:
     input:
         R1 = lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]["R1"],
@@ -40,48 +43,61 @@ rule umitools_extract:
     log:
         "logs/umitools_extract/{sample}.log"
     shell:
-        """umi_tools extract -I {input.R1} -S {output.R1} --read2-in={input.R2} --read2-out={output.R2} --extract-method=regex --bc-pattern="(?P<umi_1>.{{11}})ATAT" --log={log}"""
+#        """umi_tools extract -I {input.R1} -S {output.R1} --read2-in={input.R2} --read2-out={output.R2} --extract-method=regex --bc-pattern="(?P<umi_1>.{{11}})ATAT" --log={log}"""
+        """umi_tools extract -I {input.R1} -S {output.R1} --read2-in={input.R2} --read2-out={output.R2} --extract-method=regex --bc-pattern="(?P<umi_1>.{{15}})" --log={log}"""
 
-rule cutadapt_ATAT:
+#rule cutadapt_ATAT:
+#    input:
+#        R1=RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
+#        R2=RESULTS_DIR + "/umi_extracted_paired/R2/{sample}.fastq.gz"
+#    output:
+#        R1=RESULTS_DIR + "/cutadapt_remove_ATAT/R1/{sample}.fastq.gz",
+#        R2=RESULTS_DIR + "/cutadapt_remove_ATAT/R2/{sample}.fastq.gz"
+#    conda:
+#        "envs/cutadapt_env.yaml"
+#    log:
+#        "logs/cutadapt_remove_ATAT/{sample}.log"
+#    threads: 2
+#    shell:
+#        "cutadapt -j {threads} -g ^ATAT -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
+
+rule cutadapt:
     input:
         R1=RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
         R2=RESULTS_DIR + "/umi_extracted_paired/R2/{sample}.fastq.gz"
     output:
-        R1=RESULTS_DIR + "/cutadapt_remove_ATAT/R1/{sample}.fastq.gz",
-        R2=RESULTS_DIR + "/cutadapt_remove_ATAT/R2/{sample}.fastq.gz"
-    conda:
-        "envs/cutadapt_env.yaml"
-    log:
-        "logs/cutadapt_remove_ATAT/{sample}.log"
-    threads: 2
-    shell:
-        "cutadapt -j {threads} -g ^ATAT -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
-
-#We will probably remove this step, since these adapters are not found in our data.
-rule cutadapt:
-    input:
-        RESULTS_DIR + "/umi_extracted/{sample}.fastq.gz"
-    output:
-        RESULTS_DIR + "/cutadapt_trimmed/{sample}.fastq.gz"
+        R1=RESULTS_DIR + "/cutadapt_remove_paired/R1/{sample}.fastq.gz",
+        R2=RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz"
     conda:
         "envs/cutadapt_env.yaml"
     log:
         "logs/cutadapt/{sample}.log"
+    threads: 4
     shell:
-        "cutadapt -a AGATCGGAAGAGCGTCGTG --max-n 0 --trimmed-only -e 0.1 -q 30 -m 30 --trim-n -o {output} {input} &> {log}"
+        "cutadapt -j {threads} -a AGATCGGAAGAGCACACGTCT -A ATAT  --max-n 0 --trimmed-only -e 0.1 -q 30 -m 30 --trim-n -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
 
-rule decompress:
+rule decompress_R1:
     input:
-        RESULTS_DIR + "/cutadapt_trimmed/{sample}.fastq.gz"
+        RESULTS_DIR + "/cutadapt_remove_paired/R1/{sample}.fastq.gz",
     output:
-        temp(RESULTS_DIR + "/cutadapt_trimmed_decompressed/{sample}.fastq")
+        temp(RESULTS_DIR + "/cutadapt_remove_decompressed/R1/{sample}.fastq")
+    shell:
+        "zcat {input} > {output}"
+
+rule decompress_R2:
+    input:
+        RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz",
+    output:
+        temp(RESULTS_DIR + "/cutadapt_remove_decompressed/R2/{sample}.fastq")
     shell:
         "zcat {input} > {output}"
 
 rule hisat2_mapping:
     input:
         index=directory(HISAT2_INDEX_DIR),
-        fastq=RESULTS_DIR + "/cutadapt_trimmed_decompressed/{sample}.fastq"
+        #fastq=RESULTS_DIR + "/cutadapt_trimmed_decompressed/{sample}.fastq"
+        R1=RESULTS_DIR + "/cutadapt_remove_decompressed/R1/{sample}.fastq",
+        R2=RESULTS_DIR + "/cutadapt_remove_decompressed/R2/{sample}.fastq"
     output:
         bam=RESULTS_DIR + "/hisat2/{sample}.bam",
         multimap=RESULTS_DIR + "/hisat2/{sample}.multimappers.bam",
@@ -91,7 +107,7 @@ rule hisat2_mapping:
         "logs/hisat2/{sample}.log"
     threads: 8
     shell:
-        "python GLORI_pipeline/scripts/A2G_hisat2.py -F {input.fastq} -o " +
+        "python GLORI_pipeline/scripts/A2G_hisat2.py -F {input.R1} -R {input.R2} -o " +
             RESULTS_DIR + "/hisat2/{wildcards.sample} -I {input.index} --index-prefix HISAT2 " +
             "--hisat2-path {HISAT2_PATH} --del-convert --del-sam >& {log}"
 
