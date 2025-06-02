@@ -1,8 +1,4 @@
-# GLORI Snakemake workflow
-
-## *Paired-end version: under construction!*
-
-Please note that this README is not yet updated to reflect the paired-end version of the workflow, which is a work in progress.
+# GLORI Snakemake workflow (paired-end version)
 
 ## Credits
 
