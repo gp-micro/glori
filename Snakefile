@@ -58,42 +58,12 @@ rule umitools_extract:
     log:
         "logs/umitools_extract/{sample}.log"
     shell:
-#        """umi_tools extract -I {input.R1} -S {output.R1} --read2-in={input.R2} --read2-out={output.R2} --extract-method=regex --bc-pattern="(?P<umi_1>.{{11}})ATAT" --log={log}"""
         """umi_tools extract -I {input.R1} -S {output.R1} --read2-in={input.R2} --read2-out={output.R2} --extract-method=regex --bc-pattern="(?P<umi_1>.{{15}})" --log={log}"""
-
-#rule cutadapt_ATAT:
-#    input:
-#        R1=RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
-#        R2=RESULTS_DIR + "/umi_extracted_paired/R2/{sample}.fastq.gz"
-#    output:
-#        R1=RESULTS_DIR + "/cutadapt_remove_ATAT/R1/{sample}.fastq.gz",
-#        R2=RESULTS_DIR + "/cutadapt_remove_ATAT/R2/{sample}.fastq.gz"
-#    conda:
-#        "envs/cutadapt_env.yaml"
-#    log:
-#        "logs/cutadapt_remove_ATAT/{sample}.log"
-#    threads: 2
-#    shell:
-#        "cutadapt -j {threads} -g ^ATAT -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
-
-#rule cutadapt:
-#    input:
-#        R1=RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
-#        R2=RESULTS_DIR + "/umi_extracted_paired/R2/{sample}.fastq.gz"
-#    output:
-#        R1=RESULTS_DIR + "/cutadapt_remove_paired/R1/{sample}.fastq.gz",
-#        R2=RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz"
-#    conda:
-#        "envs/cutadapt_env.yaml"
-#    log:
-#        "logs/cutadapt/{sample}.log"
-#    threads: 4
-#    shell:
-#        "cutadapt -j {threads} -a AGATCGGAAGAGCACACGTCT -A ATAT  --max-n 0 --trimmed-only -e 0.1 -q 30 -m 30 --trim-n -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
+        """umi_tools extract -p NNNNNNNNNNNNNNN -I {input.R1} -S {output.R1} --read2-in {input.R2} --read2-out {output.R2}"""
 
 rule decompress_R1:
     input:
-        RESULTS_DIR + "/cutadapt_remove_paired/R1/{sample}.fastq.gz",
+        RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
     output:
         temp(RESULTS_DIR + "/cutadapt_remove_decompressed/R1/{sample}.fastq")
     shell:
@@ -101,7 +71,7 @@ rule decompress_R1:
 
 rule decompress_R2:
     input:
-        RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz",
+        RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz"
     output:
         temp(RESULTS_DIR + "/cutadapt_remove_decompressed/R2/{sample}.fastq")
     shell:
@@ -148,7 +118,7 @@ rule umitools_dedup:
     log:
         "logs/umitools_dedup/{sample}.log"
     shell:
-        "umi_tools dedup --stdin={input} --log={log} --method=unique > {output}"
+        "umi_tools dedup --paired --chimeric-pairs=discard --unpaired-reads=discard --stdin={input} --log={log} --method=unique > {output}"
 
 rule samtools_sort_index_dedupped:
     input:
