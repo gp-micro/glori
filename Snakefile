@@ -41,7 +41,7 @@ rule cutadapt:
         "logs/cutadapt/{sample}.log"
     threads: 4
     shell:
-        "cutadapt -m 32 -j {threads} -q 20 -e 0.25 -a AGATCGGAAGAGCACACGTC -A ATATN{11}AGATCGGAAGAGCGTCGTG -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
+        "cutadapt -m 32 -j {threads} -q 20 -e 0.25 -a AGATCGGAAGAGCACACGTC -A ATATN{{11}}AGATCGGAAGAGCGTCGTG -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
 
 #Temporarily using an UMI length of 15
 #We think that perhaps the ATAT after the UMI
