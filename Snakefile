@@ -28,13 +28,28 @@ rule hisat2_index:
     shell:
         "python GLORI_pipeline/scripts/A2G_hisat2_index.py -i {input.fasta} -p {threads} -o {output} --gtf {input.gtf} --hisat2-path {HISAT2_PATH} &> {log}"
 
+rule cutadapt:
+    input:
+        R1 = lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]["R1"],
+        R2 = lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]["R2"]
+    output:
+        R1=RESULTS_DIR + "/cutadapt_remove_paired/R1/{sample}.fastq.gz",
+        R2=RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz"
+    conda:
+        "envs/cutadapt_env.yaml"
+    log:
+        "logs/cutadapt/{sample}.log"
+    threads: 4
+    shell:
+        "cutadapt -m 32 -j {threads} -q 20 -e 0.25 -a AGATCGGAAGAGCACACGTC -A ATATN{11}AGATCGGAAGAGCGTCGTG -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
+
 #Temporarily using an UMI length of 15
 #We think that perhaps the ATAT after the UMI
 #is getting mis-sequenced due to lack of phiX...maybe
 rule umitools_extract:
     input:
-        R1 = lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]["R1"],
-        R2 = lambda wildcards: SAMPLE_TO_FASTQ[wildcards.sample]["R2"]
+        R1=RESULTS_DIR + "/cutadapt_remove_paired/R1/{sample}.fastq.gz",
+        R2=RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz"
     output:
         R1=RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
         R2=RESULTS_DIR + "/umi_extracted_paired/R2/{sample}.fastq.gz"
@@ -61,20 +76,20 @@ rule umitools_extract:
 #    shell:
 #        "cutadapt -j {threads} -g ^ATAT -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
 
-rule cutadapt:
-    input:
-        R1=RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
-        R2=RESULTS_DIR + "/umi_extracted_paired/R2/{sample}.fastq.gz"
-    output:
-        R1=RESULTS_DIR + "/cutadapt_remove_paired/R1/{sample}.fastq.gz",
-        R2=RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz"
-    conda:
-        "envs/cutadapt_env.yaml"
-    log:
-        "logs/cutadapt/{sample}.log"
-    threads: 4
-    shell:
-        "cutadapt -j {threads} -a AGATCGGAAGAGCACACGTCT -A ATAT  --max-n 0 --trimmed-only -e 0.1 -q 30 -m 30 --trim-n -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
+#rule cutadapt:
+#    input:
+#        R1=RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
+#        R2=RESULTS_DIR + "/umi_extracted_paired/R2/{sample}.fastq.gz"
+#    output:
+#        R1=RESULTS_DIR + "/cutadapt_remove_paired/R1/{sample}.fastq.gz",
+#        R2=RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz"
+#    conda:
+#        "envs/cutadapt_env.yaml"
+#    log:
+#        "logs/cutadapt/{sample}.log"
+#    threads: 4
+#    shell:
+#        "cutadapt -j {threads} -a AGATCGGAAGAGCACACGTCT -A ATAT  --max-n 0 --trimmed-only -e 0.1 -q 30 -m 30 --trim-n -o {output.R1} -p {output.R2} {input.R1} {input.R2} &> {log}"
 
 rule decompress_R1:
     input:
