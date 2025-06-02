@@ -58,7 +58,6 @@ rule umitools_extract:
     log:
         "logs/umitools_extract/{sample}.log"
     shell:
-        """umi_tools extract -I {input.R1} -S {output.R1} --read2-in={input.R2} --read2-out={output.R2} --extract-method=regex --bc-pattern="(?P<umi_1>.{{15}})" --log={log}"""
         """umi_tools extract -p NNNNNNNNNNNNNNN -I {input.R1} -S {output.R1} --read2-in {input.R2} --read2-out {output.R2}"""
 
 rule decompress_R1:
