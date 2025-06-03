@@ -64,15 +64,15 @@ rule decompress_R1:
     input:
         RESULTS_DIR + "/umi_extracted_paired/R1/{sample}.fastq.gz",
     output:
-        temp(RESULTS_DIR + "/cutadapt_remove_decompressed/R1/{sample}.fastq")
+        temp(RESULTS_DIR + "/umi_extracted_paired_decompressed/R1/{sample}.fastq")
     shell:
         "zcat {input} > {output}"
 
 rule decompress_R2:
     input:
-        RESULTS_DIR + "/cutadapt_remove_paired/R2/{sample}.fastq.gz"
+        RESULTS_DIR + "/umi_extracted_paired/R2/{sample}.fastq.gz",
     output:
-        temp(RESULTS_DIR + "/cutadapt_remove_decompressed/R2/{sample}.fastq")
+        temp(RESULTS_DIR + "/umi_extracted_paired_decompressed/R2/{sample}.fastq")
     shell:
         "zcat {input} > {output}"
 
@@ -80,8 +80,8 @@ rule hisat2_mapping:
     input:
         index=directory(HISAT2_INDEX_DIR),
         #fastq=RESULTS_DIR + "/cutadapt_trimmed_decompressed/{sample}.fastq"
-        R1=RESULTS_DIR + "/cutadapt_remove_decompressed/R1/{sample}.fastq",
-        R2=RESULTS_DIR + "/cutadapt_remove_decompressed/R2/{sample}.fastq"
+        R1=RESULTS_DIR + "/umi_extracted_paired_decompressed/R1/{sample}.fastq",
+        R2=RESULTS_DIR + "/umi_extracted_paired_decompressed/R2/{sample}.fastq"
     output:
         bam=RESULTS_DIR + "/hisat2/{sample}.bam",
         multimap=RESULTS_DIR + "/hisat2/{sample}.multimappers.bam",
