@@ -9,6 +9,8 @@ REFERENCE_FASTA = config["reference_fasta"]
 REFERENCE_GTF = config["reference_gtf"]
 DB_PATH = config["db_path"]
 
+GENE_CR = config["gene_CR"]
+
 rule list_files:
     run:
         print(SAMPLE_TO_FASTQ)
@@ -184,7 +186,7 @@ rule m6A_caller:
         "envs/m6A_caller.yaml"
     threads: 1
     shell:
-        "python scripts/m6A_caller_2.py -i {input.sheet} -o {output.m6A_calls} -P {threads} 2>&1 | tee {log}"
+        "python scripts/m6A_caller_2.py -g {GENE_CR} -i {input.sheet} -o {output.m6A_calls} -P {threads} 2>&1 | tee {log}"
 
 rule evaluate_calls:
     input:

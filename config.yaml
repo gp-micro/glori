@@ -1,17 +1,17 @@
 results_dir: "results"
 sample_to_fastq:
-    "do01":
-        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do01_S2_R1_001.fastq.gz"
-        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do01_S2_R2_001.fastq.gz"
-    "do02":
-        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do02_S3_R1_001.fastq.gz"
-        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do02_S3_R2_001.fastq.gz"
-    "do03":
-        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do03_S4_R1_001.fastq.gz"
-        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do03_S4_R2_001.fastq.gz"
-    "do04":
-        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do04_S5_R1_001.fastq.gz"
-        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/IS-700_do04_S5_R2_001.fastq.gz"
+    "Library1":
+        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/HOLDEN_Seq_Core/Library-1_S1_L004_R1_001.fastq.gz"
+        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/HOLDEN_Seq_Core/Library-1_S1_L004_R2_001.fastq.gz"
+    "Library2":
+        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/HOLDEN_Seq_Core/Library-2_S2_L004_R1_001.fastq.gz"
+        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/HOLDEN_Seq_Core/Library-2_S2_L004_R2_001.fastq.gz"
+    "Library3":
+        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/HOLDEN_Seq_Core/Library-3_S3_L004_R1_001.fastq.gz"
+        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/HOLDEN_Seq_Core/Library-3_S3_L004_R2_001.fastq.gz"
+    "Library4":
+        R1: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/HOLDEN_Seq_Core/Library-4_S4_L004_R1_001.fastq.gz"
+        R2: "/gpfs/data/mohrlab/GLORI_Greg/fastq_GLORI_HOLDEN/HOLDEN_Seq_Core/Library-4_S4_L004_R2_001.fastq.gz"
 
 #As far as I know, you must compile your own hisat2 in order for the hisat2_path
 #to work correctly. You can not module load it. You can not conda activate it.
@@ -22,3 +22,6 @@ hisat2_index_dir: "/gpfs/scratch/gp1269/GLORI/HISAT2_index_from_Fox/script_outpu
 reference_fasta: "/gpfs/scratch/gp1269/GLORI/HISAT2_index_from_Fox/GRCh38.primary_assembly.genome.nochr.HSV.fa"
 reference_gtf: "/gpfs/scratch/gp1269/GLORI/HISAT2_index_from_Fox/gencode.v45.primary_assembly.annotation.nochr.gtf"
 db_path: "/gpfs/scratch/gp1269/GLORI/db_files"
+
+#m6A caller parameters
+gene_CR: 0.2
